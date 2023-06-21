@@ -1,4 +1,4 @@
-(ns swagger-selector.selector-test
+(ns sslt.selector-test
   (:require [clojure.test :refer :all]
             [sslt.selector :refer :all]
             [sslt.core :as core]))
