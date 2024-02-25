@@ -38,6 +38,10 @@
              (sorted-map)
              (get sw "paths")))
 
+(defn read-methods
+  [filename]
+  (get-methods (read-file filename)))
+
 (comment
 
   )

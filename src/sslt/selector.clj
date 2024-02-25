@@ -60,7 +60,7 @@
    (collect-sub-types sw types #{}))
   ([sw types except]
    (if (empty? types)
-     #{}
+     except
      (let [sub-types (->> (map split-component-path types)
                           (map (partial get-in sw))
                           (mapcat get-schema-inner-types)
@@ -68,8 +68,7 @@
            prev (o/union (set types) except)
            all (o/union prev sub-types)
            diff (o/difference sub-types prev)]
-       (set (concat sub-types
-                    (collect-sub-types sw diff all)))))))
+       (recur sw diff all)))))
 
 (defn collect-types
   [sw path-methods]
