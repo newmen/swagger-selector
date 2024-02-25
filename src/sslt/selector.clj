@@ -64,18 +64,18 @@
      (let [sub-types (->> (map split-component-path types)
                           (map (partial get-in sw))
                           (mapcat get-schema-inner-types)
-                          set)
+                          (into (sorted-set)))
            all (o/union sub-types except)
            diff (o/difference sub-types except)]
        (recur sw diff all)))))
 
 (defn collect-types
   [sw path-methods]
-  (let [method-types (set
-                      (mapcat (fn [[path methods]]
-                                (collect-method-types sw path methods)) path-methods))
-        sub-types (collect-sub-types sw method-types)]
-    (into (sorted-set) sub-types)))
+  (let [method-types (->> path-methods
+                          (mapcat (fn [[path methods]]
+                                    (collect-method-types sw path methods)))
+                          (into (sorted-set)))]
+    (collect-sub-types sw method-types)))
 
 (comment
 
