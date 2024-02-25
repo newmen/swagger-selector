@@ -2,7 +2,7 @@
   (:require [clojure.string :as s]
             [clojure.set :as o]))
 
-(defn get-schema-inner-type
+(defn- get-schema-inner-type
   [schema]
   (or (get schema "$ref")
       (case (get schema "type")
@@ -10,30 +10,30 @@
         "object" (get-schema-inner-type (get schema "additionalProperties"))
         nil)))
 
-(defn get-schema-inner-types
+(defn- get-schema-inner-types
   [object]
   (->> (vals (object "properties"))
        (map get-schema-inner-type)
        (remove nil?)))
 
-(defn get-schema-type
+(defn- get-schema-type
   [item]
   (get-schema-inner-type (get item "schema")))
 
-(defn collect-param-types
+(defn- collect-param-types
   [method-data]
   (->> (get method-data "parameters")
        (map get-schema-type)
        (remove nil?)))
 
-(defn collect-request-types
+(defn- collect-request-types
   [method-data]
   (->> (get-in method-data ["requestBody" "content"])
        vals
        (map get-schema-type)
        (remove nil?)))
 
-(defn collect-response-types
+(defn- collect-response-types
   [method-data]
   (->> (get method-data "responses")
        vals
@@ -46,7 +46,7 @@
   [component-path]
   (rest (s/split component-path #"/")))
 
-(defn collect-method-types
+(defn- collect-method-types
   [sw path methods]
   (->> (map #(get-in sw ["paths" path (name %)]) methods)
        (mapcat (fn [method-data]
