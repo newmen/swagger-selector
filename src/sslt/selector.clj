@@ -57,7 +57,7 @@
 
 (defn collect-sub-types
   ([sw types]
-   (collect-sub-types sw types #{}))
+   (collect-sub-types sw types types))
   ([sw types except]
    (if (empty? types)
      except
@@ -65,9 +65,8 @@
                           (map (partial get-in sw))
                           (mapcat get-schema-inner-types)
                           set)
-           prev (o/union (set types) except)
-           all (o/union prev sub-types)
-           diff (o/difference sub-types prev)]
+           all (o/union sub-types except)
+           diff (o/difference sub-types except)]
        (recur sw diff all)))))
 
 (defn collect-types
@@ -76,8 +75,7 @@
                       (mapcat (fn [[path methods]]
                                 (collect-method-types sw path methods)) path-methods))
         sub-types (collect-sub-types sw method-types)]
-    (into (sorted-set)
-          (o/union method-types sub-types))))
+    (into (sorted-set) sub-types)))
 
 (comment
 

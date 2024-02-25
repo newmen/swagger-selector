@@ -44,4 +44,6 @@
 
 (comment
 
+  (read-methods "vkkp/vkkp-payments-api-doc")
+
   )
