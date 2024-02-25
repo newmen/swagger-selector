@@ -55,9 +55,9 @@
                          (collect-response-types method-data))))
        set))
 
-(defn collect-sub-types
+(defn collect-related-types
   ([sw types]
-   (collect-sub-types sw types types))
+   (collect-related-types sw types types))
   ([sw types except]
    (if (empty? types)
      except
@@ -75,7 +75,7 @@
                           (mapcat (fn [[path methods]]
                                     (collect-method-types sw path methods)))
                           (into (sorted-set)))]
-    (collect-sub-types sw method-types)))
+    (collect-related-types sw method-types)))
 
 (comment
 
